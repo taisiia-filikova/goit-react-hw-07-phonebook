@@ -1,53 +1,63 @@
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteContact } from '../../redux/contacts/contacts-actions';
-import {
-  getVisibleContacts,
-  getContacts,
-} from '../../redux/contacts/contacts-selectors';
-import popTransition from '../../utils/transitions/pop.module.css';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { contactsOperations, contactsSelectors } from '../../redux/contacts';
+import { motion, AnimatePresence } from 'framer-motion';
+import { variants } from '../../utils/motionVar';
 
 import s from './ContactList.module.css';
 
 function ContactList() {
   const dispatch = useDispatch();
-  const visibleContacts = useSelector(getVisibleContacts);
-  const contacts = useSelector(getContacts);
+  const visibleContacts = useSelector(contactsSelectors.getVisibleContacts);
+  const contacts = useSelector(contactsSelectors.getContacts);
+  const isLoading = useSelector(contactsSelectors.getLoading);
+  const error = useSelector(contactsSelectors.getError);
+
+  useEffect(() => dispatch(contactsOperations.fetchContacts()), [dispatch]);
 
   return (
     <>
-      <CSSTransition
-        in={!contacts.length}
-        timeout={250}
-        classNames={popTransition}
-        mountOnEnter
-        unmountOnExit
-      >
-        <p>Your phonebook is empty. Please add contact.</p>
-      </CSSTransition>
-      <TransitionGroup component="ul" className={s.list}>
-        {visibleContacts.map(({ id, name, number }) => (
-          <CSSTransition
-            key={id}
-            timeout={250}
-            mountOnEnter
-            unmountOnExit
-            classNames={popTransition}
+      {contacts.length > 0 && !error && (
+        <motion.ul className={s.list}>
+          <AnimatePresence>
+            {visibleContacts.map(({ id, name, number }) => (
+              <motion.li
+                className={s.item}
+                key={id}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition="transition"
+                variants={variants}
+              >
+                <p className={s.data}>
+                  <b>{name}</b>
+                  <em>{number}</em>
+                </p>
+                <button
+                  className={s.button}
+                  type="button"
+                  onClick={() => dispatch(contactsOperations.deleteContact(id))}
+                ></button>
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </motion.ul>
+      )}
+
+      {!contacts.length && !error && !isLoading && (
+        <AnimatePresence>
+          <motion.p
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition="transition"
+            variants={variants}
           >
-            <li className={s.item}>
-              <p className={s.data}>
-                <p>{name}</p>
-                <p>{number}</p>
-              </p>
-              <button
-                className={s.button}
-                type="button"
-                onClick={() => dispatch(deleteContact(id))}
-              ></button>
-            </li>
-          </CSSTransition>
-        ))}
-      </TransitionGroup>
+            Your phonebook is empty. Please add contact.
+          </motion.p>
+        </AnimatePresence>
+      )}
     </>
   );
 }
