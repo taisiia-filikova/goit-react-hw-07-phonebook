@@ -3,7 +3,7 @@ import ContactForm from './components/ContactForm/ContactForm';
 import ContactList from './components/ContactList/ContactList';
 import ContactFilter from './components/ContactFilter/ContactFilter';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
       <h2>Contacts</h2>
       <ContactFilter />
       <ContactList />
-      <ToastContainer autoClose={3700} />
+      <ToastContainer autoClose={3700} position="top-center" />
     </Container>
   );
 }
