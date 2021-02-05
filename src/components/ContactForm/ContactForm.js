@@ -101,7 +101,7 @@ function ContactForm() {
           Add contact
         </button>
       )}
-      {isLoading && <Loader className={s.loader} />}
+      {isLoading && <Loader />}
     </form>
   );
 }
