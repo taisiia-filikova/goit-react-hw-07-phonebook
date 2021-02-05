@@ -4,7 +4,7 @@ import { contactsOperations, contactsSelectors } from '../../redux/contacts';
 import Cleave from 'cleave.js/react';
 import { toast } from 'react-toastify';
 
-import Loader from '../Loader';
+import Loader from '../Loader/Loader';
 
 import s from './ContactForm.module.css';
 
@@ -101,7 +101,7 @@ function ContactForm() {
           Add contact
         </button>
       )}
-      {isLoading && <Loader />}
+      {isLoading && <Loader className={s.loader} />}
     </form>
   );
 }
