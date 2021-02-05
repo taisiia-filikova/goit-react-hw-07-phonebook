@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { contactsOperations, contactsSelectors } from '../../redux/contacts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { variants } from '../../utils/motionVar';
+import ErrorImg from '../ErrorImg/ErrorImg';
 
 import s from './ContactList.module.css';
 
@@ -58,6 +59,8 @@ function ContactList() {
           </motion.p>
         </AnimatePresence>
       )}
+
+      {error && <ErrorImg message={error.message} />}
     </>
   );
 }
